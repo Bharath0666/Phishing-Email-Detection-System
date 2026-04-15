@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered phishing email detection system with real-time analysis of email content, URLs, and headers.">
+    <title>PhishGuard AI — Phishing Email Detection</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Animated Background -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow--1"></div>
+    <div class="bg-glow bg-glow--2"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header__brand">
+            <div class="header__icon">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 4L34 12V28L20 36L6 28V12L20 4Z" stroke="url(#shield-grad)" stroke-width="2" fill="none"/>
+                    <path d="M20 8L30 14V26L20 32L10 26V14L20 8Z" fill="url(#shield-grad)" opacity="0.15"/>
+                    <path d="M15 20L18 23L25 16" stroke="url(#shield-grad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs>
+                        <linearGradient id="shield-grad" x1="6" y1="4" x2="34" y2="36">
+                            <stop stop-color="#00F0FF"/>
+                            <stop offset="1" stop-color="#7B61FF"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <div>
+                <h1 class="header__title">PhishGuard <span class="header__accent">AI</span></h1>
+                <p class="header__subtitle">Real-Time Phishing Email Detection</p>
+            </div>
+        </div>
+        <div class="header__status" id="headerStatus">
+            <span class="status-dot"></span>
+            <span>Checking system...</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+
+        <!-- Input Section -->
+        <section class="card card--input" id="inputSection">
+            <div class="card__header">
+                <h2 class="card__title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    Email Analysis
+                </h2>
+                <button class="btn btn--ghost" id="btnClear" title="Clear all fields">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                    Clear
+                </button>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label" for="sender">Sender Email</label>
+                    <input type="email" id="sender" class="form-input" placeholder="e.g. security@paypa1.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="subject">Subject Line</label>
+                    <input type="text" id="subject" class="form-input" placeholder="e.g. URGENT: Verify your account now">
+                </div>
+                <div class="form-group form-group--full">
+                    <label class="form-label" for="body">Email Body</label>
+                    <textarea id="body" class="form-input form-textarea" rows="7" placeholder="Paste the full email body here..."></textarea>
+                </div>
+            </div>
+
+            <!-- Collapsible Headers Section -->
+            <details class="headers-section">
+                <summary class="headers-toggle">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                    Advanced: Email Headers (Optional)
+                </summary>
+                <div class="headers-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="hdrFrom">From Header</label>
+                        <input type="text" id="hdrFrom" class="form-input form-input--sm" placeholder='"John Doe" <john@example.com>'>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="hdrReplyTo">Reply-To</label>
+                        <input type="text" id="hdrReplyTo" class="form-input form-input--sm" placeholder="reply@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="hdrAuth">Authentication-Results</label>
+                        <input type="text" id="hdrAuth" class="form-input form-input--sm" placeholder="spf=pass; dkim=pass; dmarc=pass">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="hdrXMailer">X-Mailer</label>
+                        <input type="text" id="hdrXMailer" class="form-input form-input--sm" placeholder="Microsoft Outlook 16.0">
+                    </div>
+                </div>
+            </details>
+
+            <button class="btn btn--primary" id="btnAnalyze">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Analyze Email
+            </button>
+        </section>
+
+        <!-- Loading State -->
+        <section class="card card--loading" id="loadingSection" style="display:none;">
+            <div class="loader">
+                <div class="loader__ring"></div>
+                <div class="loader__ring"></div>
+                <div class="loader__ring"></div>
+            </div>
+            <p class="loader__text">Scanning email for threats...</p>
+        </section>
+
+        <!-- Results Section -->
+        <section id="resultsSection" style="display:none;">
+
+            <!-- Verdict Banner -->
+            <div class="verdict-banner" id="verdictBanner">
+                <div class="verdict-banner__left">
+                    <div class="verdict-icon" id="verdictIcon"></div>
+                    <div>
+                        <h2 class="verdict-banner__title" id="verdictTitle">—</h2>
+                        <p class="verdict-banner__subtitle" id="verdictSubtitle">—</p>
+                    </div>
+                </div>
+                <div class="verdict-banner__right">
+                    <div class="risk-gauge" id="riskGauge">
+                        <svg viewBox="0 0 120 120" class="risk-gauge__svg">
+                            <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8"/>
+                            <circle cx="60" cy="60" r="52" fill="none" stroke-width="8" stroke-linecap="round"
+                                    class="risk-gauge__arc" id="riskArc"
+                                    stroke-dasharray="327" stroke-dashoffset="327"
+                                    transform="rotate(-90 60 60)"/>
+                        </svg>
+                        <div class="risk-gauge__value">
+                            <span class="risk-gauge__number" id="riskNumber">0</span>
+                            <span class="risk-gauge__label">Risk Score</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Panels -->
+            <div class="panels">
+
+                <!-- ML Analysis -->
+                <div class="card card--panel" id="panelML">
+                    <div class="card__header">
+                        <h3 class="card__title card__title--sm">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00F0FF" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20z"/><path d="M12 6v6l4 2"/></svg>
+                            ML Classification
+                        </h3>
+                        <span class="badge" id="mlBadge">—</span>
+                    </div>
+                    <div class="panel-stats" id="mlStats"></div>
+                    <div class="panel-section">
+                        <h4 class="panel-section__title">Risk Factors</h4>
+                        <div id="riskFactors" class="risk-factors"></div>
+                    </div>
+                </div>
+
+                <!-- URL Analysis -->
+                <div class="card card--panel" id="panelURL">
+                    <div class="card__header">
+                        <h3 class="card__title card__title--sm">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7B61FF" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                            URL Analysis
+                        </h3>
+                        <span class="badge" id="urlBadge">—</span>
+                    </div>
+                    <div class="panel-stats" id="urlStats"></div>
+                    <div id="urlFindings" class="findings-list"></div>
+                </div>
+
+                <!-- Header Analysis -->
+                <div class="card card--panel" id="panelHeader">
+                    <div class="card__header">
+                        <h3 class="card__title card__title--sm">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                            Header Analysis
+                        </h3>
+                        <span class="badge" id="headerBadge">—</span>
+                    </div>
+                    <div class="panel-stats" id="headerStats"></div>
+                    <div id="headerFindings" class="findings-list"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Model Info Section -->
+        <section class="card card--info" id="modelInfoSection">
+            <div class="card__header">
+                <h2 class="card__title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    Model &amp; Training Info
+                </h2>
+            </div>
+            <div class="info-grid" id="modelInfoGrid">
+                <p class="text-muted">Loading model information...</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>PhishGuard AI &mdash; Trained on 165K+ real-world emails &middot; Random Forest + TF-IDF + Cybersecurity Heuristics</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
